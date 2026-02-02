@@ -29,10 +29,14 @@ class resize {
 
 	function __construct($fileName) {
 		$this->image = $this->openImage($fileName);
+		// HATA KONTROLÜ: Resim yüklenemezse işlemi durdur
+		if (!$this->image) {
+			throw new Exception("Dosya yüklenemedi veya geçersiz format: " . $fileName);
+		}
 		$this->width = imagesx($this->image);
 		$this->height = imagesy($this->image);
 	}
-
+	
 	private function openImage($file) {
 		$extension = strtolower(strrchr($file, '.'));
 		switch($extension) {
@@ -52,11 +56,19 @@ class resize {
 		}
 		return $img;
 	}
-
+	
 	public function resizeImage($newWidth, $newHeight, $option="auto") {
+		// HATA KONTROLÜ: 0 değerlerini engelle
+		if ($newWidth <= 0 && $newHeight <= 0) {
+			$newWidth = $this->width; 
+			$newHeight = $this->height;
+		}
 		$optionArray = $this->getDimensions($newWidth, $newHeight, $option);
 		$optimalWidth = $optionArray['optimalWidth'];
 		$optimalHeight = $optionArray['optimalHeight'];
+		// PHP 8+ koruması: Genişlik ve yükseklik en az 1 olmalı
+		$optimalWidth = max(1, $optimalWidth);
+		$optimalHeight = max(1, $optimalHeight);
 		$this->imageResized = imagecreatetruecolor($optimalWidth, $optimalHeight);
 		imagecopyresampled($this->imageResized, $this->image, 0, 0, 0, 0, $optimalWidth, $optimalHeight, $this->width, $this->height);
 		if ($option == 'crop')

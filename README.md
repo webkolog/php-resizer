@@ -1,5 +1,6 @@
 # W-PHP Resizer
 
+[![PHPUnit Tests](https://github.com/webkolog/php-resizer/actions/workflows/php-test.yml/badge.svg)](https://github.com/webkolog/php-resizer/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 **Version:** 1.0 (Resizer)
